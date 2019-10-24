@@ -11,7 +11,11 @@ import sys
 
 #asi se escriben los directorios de las carpetas:
 carpeta_laser='C:/Users/.spyder-py3/labo/laser/fotos/'
+#para poder leerlo sin cambiar los \ por / de a uno, se puede hacer:
+carpeta_laser=r'C:\Users\.spyder-py3\labo\laser\fotos\\'.replace('\\','/')[:-1]
+#hay que agregar un \\ y copiar lo del final
 
+    
 #armar un vector con todos los archivos que terminan con ".txt" en una carpeta:                       
 
 def armar_ista(carpeta):
