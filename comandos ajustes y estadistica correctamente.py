@@ -4,9 +4,43 @@ Created on Mon Jul 29 00:14:20 2019
 
 @author: ferchi
 """
-
+from scipy.stats import chi2
+from scipy.optimize import curve_fit
+import numpy as np
 #histogramas y estadistica de la manera correcta:
 
+'''    
+COMO HACER UN TEST CORRECTO DE LA BONDAD DEL AJUSTE:
+en internet hay un monton de cosas de que es el chi^2 que estan MAL, lamentablemente. 
+es heavy que sea tan asi pero bueno, lo que te dan es el R^2 que no es una buena medida de que tan bueno es un ajuste
+un buen estimador es el chi cuadrado posta y es el siguiente: (para mas info consultar a alguien que cursara estadistica del df o probablemente en la de compu tambien lo vean)
+'''    
+def test_chi2(f,x,y,ey,parametros_ajustados=[]):
+    '''
+    f es la fucnion con la que ajustaste, x,y lo que mediste y ey el error con el que lo mediste 
+    (si no te pusiste a caracterizar el error lee abajo la parte de desviacion standard)
+    parametros_ajustados son los valores que te da el ajuste
+    '''
+    n=len(parametros_ajustados)
+    N=len(y)
+    if n==0: #si la f no viene de un ajuste
+        t=np.sum((y-f(x)/ey)**2) #t es el nombre teorico que se le da al resultado de esa cuenta, no tiene nada que ver con el tiempo
+    else:
+        t=np.sum((y-f(x,*parametros_ajustados)/ey)**2)
+        #para ser rigurosos, esto funciona si f es lineal en los parámetros (no la definiste como algo que depende de A**2), pero bue
+    
+    p_valor=1-chi2.cdf(t,N-n)
+    return p_valor  #si p-valor es menor a tu significancia (se suele usar 0.05 por motivos nefastos), se rechaza la hipotesis de que f sea la funcion posta  
+    
+          
+#desviacion estandard: (util para estimar el error en algo que mediste varias veces)
+#"y" es una tanda de N valores que mediste al realizar siempre el mismo experimento:
+#error al medir 1 vez:
+ey=np.std(y,ddof=1) #lo de ddof es por temas teóricos
+
+#error para el valor medio de tus N mediciones
+e_media=np.std(y,ddof=1)/np.sqrt(N)
+         
 #hacer un histograma de un vector "y"
 #si es solo plotear
 plt.hist(y,bins=numero_bins)
