@@ -38,6 +38,18 @@ plt.semilogx()#escala logaritmica en x
 #plotear un texto:
 plt.text(max(t)/8, max(d*10**12)*0.95, 'D= '+str("%.2f" %(D*10**12))+' $um^2$', horizontalalignment='center',verticalalignment='center')
 
-        
-        
+#plots de 3D de colores (o sea la proyección 2D): Ejemplo de gaussiana (porque aguanten las gaussianas)
+x=np.arange(-19,20,0.1)#defino x e y
+y=np.arange(-19,20,0.1)
+z=np.zeros((len(x),len(y)))
+gaussiana= lambda x,y:np.exp(-np.sqrt((np.abs(vx**2)+np.abs(vy**2)))/10)
+
+for i,vx in enumerate(x):#muy util usar enumerate
+    for j,vy in enumerate(y):
+        z[i,j]=gaussiana(vx,vy)#armo la matriz z con los valores z(x,y)
+
+    
+
+plt.contourf(x,y,z)
+plt.colorbar() # :D, anda
         
